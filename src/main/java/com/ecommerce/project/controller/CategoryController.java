@@ -2,10 +2,11 @@ package com.ecommerce.project.controller;
 
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.service.CategoryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.catalina.loader.ResourceEntry;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,20 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
 
-    @PostMapping("/api/public/categories")
+    @PostMapping("/api/admin/categories")
     public String createCategory(@RequestBody Category category){
         categoryService.createCategory(category);
         return "Category added successfully";
+    }
+
+    @DeleteMapping("/api/admin/categories/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id){
+        try {
+            String status = categoryService.deleteCategory(id);
+            return new ResponseEntity<>(status, HttpStatus.OK);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+        }
     }
 }
 

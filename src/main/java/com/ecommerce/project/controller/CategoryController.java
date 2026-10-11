@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 public class CategoryController {
 
     private CategoryService categoryService;
@@ -20,18 +21,19 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/api/public/categories")
-    public List<Category> getAllCategories() {
-        return categoryService.getAllCategories();
+    @GetMapping("/public/categories")
+    public ResponseEntity<List<Category>> getAllCategories() {
+        List<Category> categories = categoryService.getAllCategories();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    @PostMapping("/api/admin/categories")
-    public String createCategory(@RequestBody Category category){
+    @PostMapping("/admin/categories")
+    public ResponseEntity<String> createCategory(@RequestBody Category category){
         categoryService.createCategory(category);
-        return "Category added successfully";
+        return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/api/admin/categories/{id}")
+    @DeleteMapping("/admin/categories/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long id){
         try {
             String status = categoryService.deleteCategory(id);
@@ -40,6 +42,18 @@ public class CategoryController {
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         }
     }
+
+    @PutMapping("/admin/categories/{id}")
+    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody Category category){
+        try {
+            categoryService.updateCategory(id, category);
+            return new ResponseEntity<>("Category updated successfully with ->  " + category.getCategoryName(), HttpStatus.OK);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+        }
+    }
+
+
 }
 
 

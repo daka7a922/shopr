@@ -18,19 +18,19 @@ public class MyGlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> myMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 //       Map<String, String> response =ex.getBindingResult().getFieldErrors().stream()
 //                .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
-        Map<String, String> response =  new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach(err ->{
-            String fieldName = ((FieldError)err).getField();
+        Map<String, String> response = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach(err -> {
+            String fieldName = ((FieldError) err).getField();
             String errorMessage = err.getDefaultMessage();
             response.put(fieldName, errorMessage);
 
         });
 
-         return  new ResponseEntity<Map<String, String>> (response , HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Map<String, String>>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> myResourceNotFoundException(ResourceNotFoundException ex){
+    public ResponseEntity<String> myResourceNotFoundException(ResourceNotFoundException ex) {
         String message = ex.getMessage();
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }

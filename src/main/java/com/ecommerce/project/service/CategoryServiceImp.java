@@ -6,6 +6,7 @@ import com.ecommerce.project.repositories.CategoryRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @Service
@@ -31,7 +32,7 @@ public class CategoryServiceImp implements CategoryService {
     @Override
     public String deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category","categoryId", id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", id));
 
         categoryRepository.delete(category);
         return "Category with id " + id + " deleted successfully";
@@ -44,7 +45,6 @@ public class CategoryServiceImp implements CategoryService {
         categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", id));
         Category savedCategory;
-
 
         category.setCategoryId(id);
         savedCategory = categoryRepository.save(category);

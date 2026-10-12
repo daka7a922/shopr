@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @RestController
@@ -26,13 +27,13 @@ public class CategoryController {
     }
 
     @PostMapping("/admin/categories")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category){
+    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
         categoryService.createCategory(category);
         return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/admin/categories/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long id){
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
         try {
             String status = categoryService.deleteCategory(id);
             return new ResponseEntity<>(status, HttpStatus.OK);
@@ -42,7 +43,7 @@ public class CategoryController {
     }
 
     @PutMapping("/admin/categories/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody Category category){
+    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody Category category) {
         try {
             categoryService.updateCategory(id, category);
             return new ResponseEntity<>("Category updated successfully with ->  " + category.getCategoryName(), HttpStatus.OK);

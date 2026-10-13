@@ -20,11 +20,13 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+
     @GetMapping("/public/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
         List<Category> categories = categoryService.getAllCategories();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
+
 
     @PostMapping("/admin/categories")
     public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
@@ -32,27 +34,22 @@ public class CategoryController {
         return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
     }
 
+
     @DeleteMapping("/admin/categories/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
-        try {
-            String status = categoryService.deleteCategory(id);
-            return new ResponseEntity<>(status, HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
+        String status = categoryService.deleteCategory(id);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+
     }
+
 
     @PutMapping("/admin/categories/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody Category category) {
-        try {
-            categoryService.updateCategory(id, category);
-            return new ResponseEntity<>("Category updated successfully with ->  " + category.getCategoryName(), HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
+    public ResponseEntity<String> updateCategory(@PathVariable Long id,
+                                                 @Valid @RequestBody Category category) {
+        categoryService.updateCategory(id, category);
+        return new ResponseEntity<>("Category updated successfully with ->  " + category.getCategoryName(), HttpStatus.OK);
+
     }
-
-
 }
 
 

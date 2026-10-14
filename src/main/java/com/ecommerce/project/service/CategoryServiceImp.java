@@ -8,6 +8,9 @@ import com.ecommerce.project.payload.CategoryResponse;
 import com.ecommerce.project.repositories.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +31,12 @@ public class CategoryServiceImp implements CategoryService {
 
 
     @Override
-    public CategoryResponse getAllCategories() {
-        List<Category> categories = categoryRepository.findAll();
+    public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize) {
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize);
+        Page<Category> categoryPage = categoryRepository.findAll(pageDetails);
+
+        List<Category> categories = categoryPage.getContent();
 
         if (categories.isEmpty()) {
             throw new APIException("No categories found");
@@ -56,25 +63,28 @@ public class CategoryServiceImp implements CategoryService {
     }
 
     @Override
-    public String deleteCategory(Long id) {
+    public CategoryDTO deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", id));
 
         categoryRepository.delete(category);
-        return "Category with id " + id + " deleted successfully";
+        return modelMapper.map(category, CategoryDTO.class);
 
     }
 
     @Override
-    public Category updateCategory(Long id, Category category) {
+    public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
 
         categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", id));
-        Category savedCategory;
+
+        Category category = modelMapper.map(categoryDTO, Category.class);
 
         category.setCategoryId(id);
-        savedCategory = categoryRepository.save(category);
-        return savedCategory;
+        Category savedCategory = categoryRepository.save(category);
+
+
+        return modelMapper.map(savedCategory, CategoryDTO.class);
 
     }
 }

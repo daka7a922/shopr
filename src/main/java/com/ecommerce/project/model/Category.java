@@ -5,10 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Entity(name = "categories")
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table(name = "categories")
 public class Category {
 
     @Id
